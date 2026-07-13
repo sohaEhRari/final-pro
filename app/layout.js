@@ -1,17 +1,20 @@
-import Navbar from "../components/Navbar"
+import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "../context/ThemeContext";
 
-
-
-
-
-export default function layOut({children}){
-  return(
-    <html>
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
       <body>
-<Navbar/>
-{children}
+        <ThemeProvider>
+          <div className="flex">
+            <Navbar />
 
+            <main className="flex-1 p-6">
+              {children}
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
-      </html>
-  )
+    </html>
+  );
 }
