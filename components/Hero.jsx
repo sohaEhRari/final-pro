@@ -1,16 +1,8 @@
-"use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/log/auth";
 
 export default function Hero() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    setUser(getCurrentUser());
-  }, []);
-
+ 
   return (
     <section className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -19,14 +11,11 @@ export default function Hero() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center p-6 sm:p-8 md:p-10 lg:p-14">
 
-            {/* Left */}
             <div className="text-center lg:text-left">
 
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                 👋 Welcome back,
-                <span className="text-yellow-300 ml-2">
-                  {user?.name || "User"}
-                </span>
+               
               </h2>
 
               <h1 className="mt-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">

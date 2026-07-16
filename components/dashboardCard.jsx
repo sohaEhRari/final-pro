@@ -1,6 +1,6 @@
 export default function DashboardCard({title,icon,value}){
     return(
-        <div className="bg-white rounded-2xl shadow p-6 flex items-center justify-between">
+        <div className="bg-dark rounded-2xl shadow p-6 flex items-center justify-between">
             <div>
 <p className="text-gray font-bold">
 {title}

@@ -2,18 +2,46 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+
 import Hero from "../../components/Hero";
 import SearchFilter from "../../components/searchFilter";
 import DashboardCard from "@/components/dashboardCard";
 import { getOpportunity } from "@/lib/utilis";
 
 export default function Dashboard() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
   const [opportunity, setOpportunity] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     setOpportunity(getOpportunity());
-  }, []);
+
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
+
+  const logout = async () => {
+    await signOut({
+      callbackUrl: "/login",
+    });
+  };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
 
   const total = opportunity.length;
 
@@ -53,322 +81,127 @@ export default function Dashboard() {
       "analytics",
     ].some((text) => text.includes(query));
 
-
   return (
-    <div className="
-      min-h-screen
-      overflow-x-hidden
-      bg-slate-50
-      dark:bg-slate-950
-      text-slate-900
-      dark:text-white
-      transition-colors
-    ">
+    <div className="w-full min-h-screen overflow-x-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white">
 
       <Hero />
 
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="bg-blue-600 text-white rounded-2xl shadow-lg p-6 flex justify-between items-center">
 
-      <section className="
-        max-w-7xl
-        mx-auto
-        px-4
-        sm:px-6
-        lg:px-8
-        mt-8
-        sm:mt-12
-      ">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              Welcome, {session.user.email.split("@")[0]} 👋
+            </h1>
 
-        <div className="
-          bg-white
-          dark:bg-slate-900
-          rounded-2xl
-          sm:rounded-3xl
-          shadow-lg
-          p-5
-          sm:p-8
-          border
-          border-slate-200
-          dark:border-slate-800
-        ">
+            <p className="mt-2 text-blue-100">
+              We are happy to have you back.
+            </p>
 
-          <p className="
-            text-sm
-            sm:text-base
-            lg:text-lg
-            text-slate-600
-            dark:text-slate-300
-            leading-relaxed
-          ">
-            Manage your opportunities, explore new possibilities,
-            and grow your career with KaarYab Afghanistan.
-          </p>
+            <p className="mt-1 text-sm text-blue-200">
+              {session.user.email}
+            </p>
+          </div>
+
+          <button
+            onClick={logout}
+            className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold"
+          >
+            Logout
+          </button>
 
         </div>
-
       </section>
 
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
+          <p>
+            Manage your opportunities, explore new possibilities, and grow your
+            career with KaarYab Afghanistan.
+          </p>
+        </div>
+      </section>
 
-
-      <div className="
-        mt-8
-        sm:mt-12
-        px-4
-        sm:px-6
-        lg:px-8
-      ">
+      <div className="mt-8 px-4 sm:px-6 lg:px-8">
         <SearchFilter
           search={search}
           setSearch={setSearch}
         />
       </div>
 
-
-
-      <main className="
-        max-w-7xl
-        mx-auto
-        px-4
-        sm:px-6
-        lg:px-8
-        py-8
-        sm:py-12
-      ">
-
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {showStatistics && (
-
-          <div className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            lg:grid-cols-4
-            gap-4
-            sm:gap-6
-          ">
-
-            <DashboardCard
-              value={total}
-              title="Total Opportunities"
-            />
-
-            <DashboardCard
-              value={categories}
-              title="Categories"
-            />
-
-            <DashboardCard
-              value={expired}
-              title="Expired"
-            />
-
-            <DashboardCard
-              value={active}
-              title="Active"
-            />
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <DashboardCard value={total} title="Total Opportunities" />
+            <DashboardCard value={categories} title="Categories" />
+            <DashboardCard value={expired} title="Expired" />
+            <DashboardCard value={active} title="Active" />
           </div>
-
         )}
 
-
-
         {showQuickActions && (
+          <section className="mt-12">
 
-          <section className="mt-10 sm:mt-14">
-
-
-            <h2 className="
-              text-2xl
-              sm:text-3xl
-              font-bold
-              text-slate-800
-              dark:text-white
-            ">
+            <h2 className="text-3xl font-bold mb-6">
               Quick Actions
             </h2>
 
-
-
-            <div className="
-              grid
-              grid-cols-1
-              md:grid-cols-2
-              lg:grid-cols-3
-              gap-5
-              mt-5
-            ">
-
-
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
               <Link
                 href="/add-opportunity"
-                className="
-                  bg-blue-600
-                  text-white
-                  rounded-2xl
-                  p-5
-                  sm:p-6
-                  shadow-lg
-                  hover:shadow-xl
-                  hover:-translate-y-1
-                  transition
-                "
+                className="bg-blue-600 text-white rounded-2xl p-6"
               >
-
-                <h3 className="text-lg sm:text-xl font-bold text-white">
+                <h3 className="text-xl font-bold">
                   Add Opportunity
                 </h3>
 
-                <p className="
-                  mt-2
-                  text-sm
-                  sm:text-base
-                  text-blue-100
-                ">
+                <p className="mt-2">
                   Create and publish a new opportunity.
                 </p>
-
               </Link>
-
-
-
 
               <Link
                 href="/opportunities"
-                className="
-                  bg-white
-                  dark:bg-slate-900
-                  border
-                  border-slate-200
-                  dark:border-slate-700
-                  rounded-2xl
-                  p-5
-                  sm:p-6
-                  shadow-lg
-                  hover:shadow-xl
-                  hover:-translate-y-1
-                  transition
-                "
+                className="bg-white dark:bg-slate-900 border rounded-2xl p-6"
               >
-
-                <h3 className="
-                  text-lg
-                  sm:text-xl
-                  font-bold
-                  text-slate-800
-                  dark:text-white
-                ">
+                <h3 className="text-xl font-bold">
                   View Opportunities
                 </h3>
 
-
-                <p className="
-                  mt-2
-                  text-sm
-                  sm:text-base
-                  text-slate-500
-                  dark:text-slate-400
-                ">
+                <p className="mt-2">
                   Browse all opportunities.
                 </p>
-
               </Link>
-
-
-
-
 
               <Link
                 href="/dashboard"
-                className="
-                  bg-white
-                  dark:bg-slate-900
-                  border
-                  border-slate-200
-                  dark:border-slate-700
-                  rounded-2xl
-                  p-5
-                  sm:p-6
-                  shadow-lg
-                  hover:shadow-xl
-                  hover:-translate-y-1
-                  transition
-                "
+                className="bg-white dark:bg-slate-900 border rounded-2xl p-6"
               >
-
-                <h3 className="
-                  text-lg
-                  sm:text-xl
-                  font-bold
-                  text-slate-800
-                  dark:text-white
-                ">
+                <h3 className="text-xl font-bold">
                   Analytics
                 </h3>
 
-
-                <p className="
-                  mt-2
-                  text-sm
-                  sm:text-base
-                  text-slate-500
-                  dark:text-slate-400
-                ">
+                <p className="mt-2">
                   Platform statistics and reports.
                 </p>
-
-
               </Link>
-
 
             </div>
 
           </section>
-
         )}
-
 
       </main>
 
-
-
-      <footer className="
-        bg-slate-800
-        dark:bg-black
-        text-white
-        py-6
-        px-4
-        rounded-t-3xl
-      ">
-
-        <ul className="
-          flex
-          flex-col
-          sm:flex-row
-          justify-center
-          items-center
-          gap-3
-          sm:gap-8
-          text-xs
-          sm:text-sm
-        ">
-
-          <li>
-            © Copyright Reserved
-          </li>
-
-          <li>
-            2026
-          </li>
-
-          <li>
-            Contact With Us
-          </li>
-
+      <footer className="bg-slate-800 text-white py-6">
+        <ul className="flex justify-center gap-6">
+          <li>© Copyright Reserved</li>
+          <li>2026</li>
+          <li>Contact With Us</li>
         </ul>
-
       </footer>
-
 
     </div>
   );

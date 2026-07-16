@@ -5,12 +5,10 @@ export default function ProfilePage() {
   const skills = [
     "Next.js",
     "React",
-    "TypeScript",
+    "Javascript",
     "Tailwind CSS",
-    "Laravel",
-    "Node.js",
-    "PostgreSQL",
-    "Docker",
+    "Bootstrap",
+   
   ];
 
   const projects = [
@@ -230,7 +228,6 @@ export default function ProfilePage() {
                     href="/projects"
                     className="mt-5 inline-block text-blue-400 hover:text-blue-300"
                   >
-                    View Project →
                   </Link>
 
                 </div>
