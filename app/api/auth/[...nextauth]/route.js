@@ -11,16 +11,23 @@ const authOptions = {
           label: "Email",
           type: "email",
         },
+
         password: {
           label: "Password",
           type: "password",
         },
       },
 
+
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+
+        if (
+          !credentials?.email ||
+          !credentials?.password
+        ) {
           return null;
         }
+
 
         // Demo account
         if (
@@ -29,6 +36,7 @@ const authOptions = {
         ) {
           return null;
         }
+
 
         return {
           id: "1",
@@ -39,17 +47,26 @@ const authOptions = {
     }),
   ],
 
+
   pages: {
     signIn: "/login",
   },
+
 
   session: {
     strategy: "jwt",
   },
 
+
   secret: process.env.NEXTAUTH_SECRET,
 };
 
+
+
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+
+export {
+  handler as GET,
+  handler as POST,
+};
