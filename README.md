@@ -132,6 +132,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 #CareerPath Project
 
+#Deploy on vercel
+https://final-pro-liart.vercel.app/
+
+
 
 Project Name: CareerPath 
 
